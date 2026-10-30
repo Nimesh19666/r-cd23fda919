@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# Secrets: DB password lives here, NEVER commit
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+frontend/dist/
+
+# Raw API dumps can be re-created
+data/raw/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

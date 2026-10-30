@@ -1,0 +1,31 @@
+# The database is the free Neon one, so there is no database container here.
+# Put DATABASE_URL in backend/.env (see backend/.env.example).
+#
+#   docker compose up --build                       the portal on http://localhost:8000
+#   docker compose --profile tools run --rm test    run the tests
+#   docker compose --profile tools run --rm ingest python scripts/init_db.py
+#   docker compose --profile tools run --rm ingest  load the January data
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file: backend/.env
+
+  test:
+    build:
+      context: .
+      target: test
+    profiles: ["tools"]
+    environment:
+      # Tests use in-memory fakes; this only lets settings load.
+      DATABASE_URL: postgresql+psycopg://test:test@localhost/test
+
+  ingest:
+    build:
+      context: .
+      target: backend
+    profiles: ["tools"]
+    env_file: backend/.env
+    command: python scripts/load_data.py
