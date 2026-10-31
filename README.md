@@ -10,8 +10,8 @@ Scope: purchase decisions made in **January 2026**, so delivery days run from 2 
 
 ## Live demo
 
-- Portal: **<PORTAL_URL>**
-- API: **<API_URL>**/api/health
+- Portal: **https://r-cd23fda919-1qbk.vercel.app/**
+- API: **https://r-cd23fda919-ten.vercel.app**/api/health
 
 ## What you see
 
