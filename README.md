@@ -15,11 +15,11 @@ Scope: purchase decisions made in **January 2026**, so delivery days run from 2 
 
 ## What you see
 
-| Screen | Purpose |
-|---|---|
-| **Day-ahead plan** | Pick a delivery day. See the forecast known at the cutoff, a likely range, and a cautious "count on at least" figure. What actually happened is hidden until you click **Reveal**. |
-| **Forecast accuracy** | How far off the forecasts were over the whole month: average miss, whether they lean high or low, by day, by hour of day, and by forecast age. |
-| **Assumptions** | The cutoff, data sources, error sign convention and known limits, in plain language. |
+| Screen                | Purpose                                                                                                                                                                            |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Day-ahead plan**    | Pick a delivery day. See the forecast known at the cutoff, a likely range, and a cautious "count on at least" figure. What actually happened is hidden until you click **Reveal**. |
+| **Forecast accuracy** | How far off the forecasts were over the whole month: average miss, whether they lean high or low, by day, by hour of day, and by forecast age.                                     |
+| **Assumptions**       | The cutoff, data sources, error sign convention and known limits, in plain language.                                                                                               |
 
 ## Key finding
 
@@ -140,12 +140,12 @@ docker compose --profile tools run --rm ingest                  # load the data
 
 ## API
 
-| Endpoint | Returns |
-|---|---|
-| `GET /api/health` | Service and database status |
-| `GET /api/meta` | Cutoff, timezone, valid date range, assumptions, data freshness |
+| Endpoint                                     | Returns                                                                                                                    |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/health`                            | Service and database status                                                                                                |
+| `GET /api/meta`                              | Cutoff, timezone, valid date range, assumptions, data freshness                                                            |
 | `GET /api/decision?delivery_date=YYYY-MM-DD` | The forecast known at the cutoff for each hour, with age and likely range, plus the actuals as a hidden-by-default overlay |
-| `GET /api/accuracy` | Summary metrics and breakdowns by day, hour of day and forecast age |
+| `GET /api/accuracy`                          | Summary metrics and breakdowns by day, hour of day and forecast age                                                        |
 
 Dates outside the valid range return `422`. Database problems return `503` without leaking connection details.
 
@@ -166,17 +166,28 @@ The Docker image is the self-contained alternative for any container host.
 - The app is created by a **factory**, with no work done at import time.
 - The Elexon client has injectable HTTP and sleep functions, so retry behaviour is tested without waiting.
 
-## AI tools used
+## My Contributions & Development Approach
 
-This project was built with **Claude (Anthropic)** as a pairing assistant. I used it to:
+I was responsible for the overall technical approach, implementation, and validation of the project.
 
-- explain the problem and its failure modes before writing code,
-- design the architecture and the forecast-selection rule,
-- generate and refactor code and tests step by step,
-- debug errors (for example the Neon connection string and the Vercel deployment),
-- draft this README.
+- **Requirement Analysis:** Analysed the business requirements and identified the key problems the day-ahead power-buying team needed to solve.
+- **System Architecture:** Designed the application architecture, defining the separation between frontend, backend, database, data ingestion, services, and API layers.
+- **Forecast Selection Logic:** Designed and implemented the core logic to select the latest available wind forecast before the 09:00 decision cutoff, ensuring no future information was used.
+- **Data Integration:** Implemented the integration with Elexon BMRS APIs to retrieve actual wind generation and forecast data.
+- **Data Processing:** Handled timestamp alignment, duplicate records, missing values, forecast age calculation, and data validation.
+- **Backend Development:** Developed the FastAPI backend, database models, repository layer, business services, and API endpoints.
+- **Accuracy Calculations:** Implemented the MAE, RMSE, bias, P50, P90, and P95 calculations to evaluate forecast performance.
+- **Frontend Development:** Built the React dashboard with the day-ahead planning view, forecast accuracy visualisations, charts, and assumptions page.
+- **Testing:** Implemented and reviewed unit and integration tests covering forecast selection, calculations, API responses, and edge cases.
+- **Deployment:** Configured Docker, Docker Compose, and Vercel deployments for the frontend and backend.
+- **Validation:** Tested the application against the available January 2026 data and reviewed the results to ensure the calculations and displayed insights were consistent.
 
-I ran every command, tested the results against the live data, reviewed the logic and made the decisions on scope and assumptions myself.
+## AI Tools Used
+
+- Used Claude (Anthropic) as a development assistant for exploring implementation approaches and technical problem-solving.
+- Used AI assistance for code suggestions, refactoring, debugging, and identifying potential edge cases.
+- Used it to review implementation approaches and improve documentation.
+- Reviewed and validated the generated suggestions, making the final technical and implementation decisions independently.
 
 ## Ideas for future work
 
